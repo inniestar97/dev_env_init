@@ -9,11 +9,11 @@ sudo apt-get install -y git gcc zsh
 sudo add-apt-repository ppa:neovim-ppa/stable
 sudo apt-get update -y
 sudo apt-get install -y neovim
-mkdir ~/.config/nvim
-touch ~/.config/nvim/init.vim ~/.vimrc
-echo "set runtimepath+=~/.vim,~/.vim/after" >> ~/.config/nvim/init.vim
-echo "set packpath+=~/.vim" >> ~/.config/nvim/init.vim
-echo "source ~/.vimrc" >> ~/.config/nvim/init.vim
+mkdir ${HOME}/.config/nvim
+touch ${HOME}/.config/nvim/init.vim ~/.vimrc
+echo "set runtimepath+=~/.vim,~/.vim/after" >> ${HOME}/.config/nvim/init.vim
+echo "set packpath+=~/.vim" >> ${HOME}/.config/nvim/init.vim
+echo "source ~/.vimrc" >> ${HOME}/.config/nvim/init.vim
 
 ## install zsh
 sudo chsh -s $(which zsh)
@@ -27,18 +27,17 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git
 cd nerd-fonts
 ./install.sh CaskaydiaCove, Ubuntu, UbuntuMono
-cd ~
-rm -rf nerd-fonts
+cd ${HOME}
+rm -rf ${HOME}/nerd-fonts
 
-## vim bundle installation
-git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-cd ~
+## vim-plug installation
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 git clone https://github.com/inniestar97/vimrc.git
-cp -f ~/vimrc/vimrc ~/.vimrc
-cd ~
-rm -rf vimrc
-vim +PluginInstall +qall
-source ~/.vimrc
+cp -f ${HOME}/vimrc/vimrc ${HOME}/.vimrc
+rm -rf ${HOME}/vimrc
+cd ${HOME}
+vim +PlugInstall +qall
 
 ### Checked docker already exist
 ## need to check docker run without sudo
