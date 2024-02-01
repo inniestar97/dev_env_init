@@ -13,7 +13,7 @@ mkdir ~/.config/nvim
 touch ~/.config/nvim/init.vim ~/.vimrc
 echo "set runtimepath+=~/.vim,~/.vim/after" >> ~/.config/nvim/init.vim
 echo "set packpath+=~/.vim" >> ~/.config/nvim/init.vim
-source ~/.vimrc
+echo "source ~/.vimrc" >> ~/.config/nvim/init.vim
 
 ## install zsh
 sudo chsh -s $(which zsh)
