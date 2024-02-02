@@ -20,7 +20,7 @@ if [ ${_PLATFORM} == "Linux" ] ; then
 elif [ ${_PLATFORM} == "Darwin" ] ; then
 
 	/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	brew install gcc
+	brew install gcc gnu-sed
 
 else
 	echo "Not unix platform"
@@ -69,13 +69,34 @@ fi
 if [ ${_PLATFORM} == "Linux" ] ; then
 
 	sudo apt-get install -y curl
-	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 elif [ ${_PLATFORM} == "Darwin" ] ; then
 	:
 else
 	:
 fi
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+## -----------------------------------------------
+## -------------- powerlevel10k ------------------
+## ---------- zsh-syntax-highlighting ------------
+## -----------------------------------------------
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+if [ ${_PLATFORM} == "Linux" ] ; then
+
+	sed -i "s/plugins=(git)/plugins=(\n\tgit\n\tzsh-syntax-highlighting\n)/g" $HOME/.zshrc
+	sed -i "s/robbyrussell/powerlevel10k\/powerlevel10k/g" $HOME/.zshrc
+
+elif [ ${_PLATFORM} == "Darwin" ] ; then
+
+	gsed -i "s/plugins=(git)/plugins=(\n\tgit\n\tzsh-syntax-highlighting\n)/g" $HOME/.zshrc
+	gsed -i "s/robbyrussell/powerlevel10k\/powerlevel10k/g" $HOME/.zshrc
+
+else
+	:
+fi
+source ~/.zshrc
 
 ## -----------------------------------------------
 ## ------------- install nerd-font ---------------
@@ -107,6 +128,8 @@ cp -f ${_SCRIPT_DIR_PATH}/vimrc ${HOME}/.vimrc
 rm -rf ${HOME}/vimrc
 cd ${HOME}
 vim +PlugInstall +qall
+
+
 
 ### Checked docker already exist
 ## need to check docker run without sudo
