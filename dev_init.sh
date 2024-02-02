@@ -130,6 +130,14 @@ cd ${HOME}
 vim +PlugInstall +qall
 
 
+## git log --graph --all --oneline --author-date-order command
+#git() {
+#  if [[ $@ == "tree" ]]; then
+#    command git log --graph --all --oneline --author-date-order
+#  else
+#    command git "$@"
+#  fi
+#}
 
 ### Checked docker already exist
 ## need to check docker run without sudo
