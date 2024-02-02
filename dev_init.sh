@@ -1,40 +1,109 @@
 #! /bin/sh
 
-## basic initialization
-sudo apt-get update -y
-sudo apt-get install -y build-essentials
-sudo apt-get install -y git gcc zsh
+_PLATFORM=`uname`
+_SCRIPT_DIR_PATH=$(dirname $0)/
 
-## neovim installation and initialization
-sudo add-apt-repository ppa:neovim-ppa/stable
-sudo apt-get update -y
-sudo apt-get install -y neovim
+if [ -z ${_PLATFORM} ] ; then
+	echo "There's no Platform"
+	exit
+fi
+
+## -----------------------------------------------
+## ------------- basic initialization ------------
+## -----------------------------------------------
+if [ ${_PLATFORM} == "Linux" ] ; then
+
+	sudo apt-get update -y
+	sudo apt-get install -y build-essentials
+	sudo apt-get install -y git gcc
+
+elif [ ${_PLATFORM} == "Darwin" ] ; then
+
+	/bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	brew install gcc
+
+else
+	echo "Not unix platform"
+fi
+
+## -----------------------------------------------
+## --- neovim installation and initialization ----
+## -----------------------------------------------
+if [ ${_PLATFORM} == "Linux" ] ; then
+
+	sudo add-apt-repository ppa:neovim-ppa/stable
+	sudo apt-get update -y
+	sudo apt-get install -y neovim
+
+elif [ ${_PLATFORM} == "Darwin" ] ; then
+
+	brew install nvim
+
+else
+	:
+fi
 mkdir ${HOME}/.config/nvim
 touch ${HOME}/.config/nvim/init.vim ~/.vimrc
 echo "set runtimepath+=~/.vim,~/.vim/after" >> ${HOME}/.config/nvim/init.vim
 echo "set packpath+=~/.vim" >> ${HOME}/.config/nvim/init.vim
 echo "source ~/.vimrc" >> ${HOME}/.config/nvim/init.vim
 
-## install zsh
-sudo chsh -s $(which zsh)
-echo $SHELL
+## -----------------------------------------------
+## ---------------- install zsh ------------------
+## -----------------------------------------------
+if [ ${_PLATFORM} == "Linux" ] ; then
 
-## install oh-my-zsh
-sudo apt-get install -y curl wget
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+	sudo apt-get install -y zsh
+	sudo chsh -s $(which zsh)
+	echo $SHELL
 
-## install nerd-font -> Caskaydia Cove, Ubuntu, Ubuntu Mono
-git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git
-cd nerd-fonts
-./install.sh CaskaydiaCove, Ubuntu, UbuntuMono
-cd ${HOME}
-rm -rf ${HOME}/nerd-fonts
+elif [ ${_PLATFORM} == "Darwin" ] ; then
+	:
+else
+	:
+fi
 
-## vim-plug installation
+## -----------------------------------------------
+## ------------- install oh-my-zsh ---------------
+## -----------------------------------------------
+if [ ${_PLATFORM} == "Linux" ] ; then
+
+	sudo apt-get install -y curl
+	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+elif [ ${_PLATFORM} == "Darwin" ] ; then
+	:
+else
+	:
+fi
+
+## -----------------------------------------------
+## ------------- install nerd-font ---------------
+## -----------------------------------------------
+if [ ${_PLATFORM} == "Linux" ] ; then
+
+	# Caskaydia Cover, Ubuntu, Ubuntu Mono
+	git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git
+	cd nerd-fonts
+	./install.sh CaskaydiaCove, Ubuntu, UbuntuMono
+	cd ${HOME}
+	rm -rf ${HOME}/nerd-fonts
+
+elif [ ${_PLATFORM} == "Darwin" ] ; then
+	# Caskaydia Cover
+	brew tap homebrew/cask-fonts
+	brew install font-caskaydia-cove-nerd-font
+	
+else
+	:
+fi
+
+## -----------------------------------------------
+## ----------- vim-plug installation -------------
+## -----------------------------------------------
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-git clone https://github.com/inniestar97/vimrc.git
-cp -f ${HOME}/vimrc/vimrc ${HOME}/.vimrc
+			 https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+cp -f ${_SCRIPT_DIR_PATH}/vimrc ${HOME}/.vimrc
 rm -rf ${HOME}/vimrc
 cd ${HOME}
 vim +PlugInstall +qall
