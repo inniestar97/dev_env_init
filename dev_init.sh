@@ -14,6 +14,7 @@ fi
 if [ ${_PLATFORM} == "Linux" ] ; then
 
 	sudo apt-get update -y
+	sudo apt-get install -y software-properties-common
 	sudo apt-get install -y build-essentials
 	sudo apt-get install -y git gcc
 
@@ -31,7 +32,7 @@ fi
 ## -----------------------------------------------
 if [ ${_PLATFORM} == "Linux" ] ; then
 
-	sudo add-apt-repository ppa:neovim-ppa/stable
+	sudo add-apt-repository -y ppa:neovim-ppa/stable
 	sudo apt-get update -y
 	sudo apt-get install -y neovim
 
@@ -106,7 +107,7 @@ if [ ${_PLATFORM} == "Linux" ] ; then
 	# Caskaydia Cover, Ubuntu, Ubuntu Mono
 	git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git
 	cd nerd-fonts
-	./install.sh CaskaydiaCove, Ubuntu, UbuntuMono
+	./install.sh CascadiaCode, Ubuntu, UbuntuMono
 	cd ${HOME}
 	rm -rf ${HOME}/nerd-fonts
 
